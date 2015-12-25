@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Tic-Tac-Toe</string>
+    <string-array name="player_type_list">
+        <item>is human</item>
+        <item>is a computer</item>
+    </string-array>
+    <string-array name="player_order_list">
+        <item>plays first</item>
+        <item>plays second</item>
+    </string-array>
+</resources>
