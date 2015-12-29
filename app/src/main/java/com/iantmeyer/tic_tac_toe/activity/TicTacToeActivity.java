@@ -28,7 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class TicTacToeActivity extends AppCompatActivity
-        implements TicTacToeGame.GameProvider, Toolbar.OnMenuItemClickListener {
+        implements Toolbar.OnMenuItemClickListener {
 
     private static final String TAG = "TicTacToeActivity";
 
@@ -55,6 +55,7 @@ public class TicTacToeActivity extends AppCompatActivity
             mGame = new TicTacToeGame(savedBoard);
             mGame.setPlayerHuman(1, SettingsUtil.isPlayerHuman(1));
             mGame.setPlayerHuman(2, SettingsUtil.isPlayerHuman(2));
+            mGame.setState(SettingsUtil.getGameState());
         }
 
         mToolbar.inflateMenu(R.menu.menu_main);
@@ -72,6 +73,7 @@ public class TicTacToeActivity extends AppCompatActivity
         super.onPause();
 
         SettingsUtil.saveGameBoard(mGame.getBoard());
+        SettingsUtil.saveGameState(mGame.getState());
 
         BusProvider.INSTANCE.getBus().unregister(this);
     }
@@ -83,7 +85,6 @@ public class TicTacToeActivity extends AppCompatActivity
      *
      * @return
      */
-    @Override
     public TicTacToeGame getGame() {
         return mGame;
     }

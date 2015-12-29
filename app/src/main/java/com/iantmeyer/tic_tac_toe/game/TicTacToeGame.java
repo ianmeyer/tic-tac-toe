@@ -7,6 +7,7 @@ import com.iantmeyer.tic_tac_toe.util.BusProvider;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
 /**
@@ -17,9 +18,7 @@ public class TicTacToeGame implements GameAi.GameAiInterface {
     private static final String TAG = "TicTacToeGame";
 
     private int mBoard[][];
-    private int mBoardSize = 3;
     private int mNextPlayer = 1;
-
     private State mState = State.SET_UP;
 
     private boolean[] mPlayerHuman = new boolean[2];
@@ -64,7 +63,6 @@ public class TicTacToeGame implements GameAi.GameAiInterface {
         mState = State.SET_UP;
         int size = mBoard.length;
         mBoard = new int[size][size];
-        mState = State.IN_PROGRESS;
         if (0 < firstPlayer && firstPlayer <= 2) {
             Log.i(TAG, "Setting first player as " + firstPlayer);
             mNextPlayer = firstPlayer;
@@ -196,7 +194,7 @@ public class TicTacToeGame implements GameAi.GameAiInterface {
     }
 
     /**
-     * The board state of the game as an array
+     * The board of the game as an array
      * <br>
      * 0 => empty square
      * <br>
@@ -204,6 +202,13 @@ public class TicTacToeGame implements GameAi.GameAiInterface {
      */
     public int[][] getBoard() {
         return mBoard;
+    }
+
+    /**
+     * The board state of the game
+     */
+    public void setState(State state) {
+        mState = state;
     }
 
     /**
@@ -310,6 +315,7 @@ public class TicTacToeGame implements GameAi.GameAiInterface {
 
         Move move = (Move) testMove;
 
+        // Create temporary board with testMove
         int[][] board = new int[mBoard.length][mBoard[0].length];
         for (int idx = 0; idx < mBoard.length; idx++) {
             board[idx] = Arrays.copyOf(mBoard[idx], mBoard[idx].length);
@@ -323,7 +329,7 @@ public class TicTacToeGame implements GameAi.GameAiInterface {
         for (int rowIdx = 0; rowIdx < board.length; rowIdx++) {
             winPossible = true;
             foundPlayer = 0;
-            for (int colIdx = 0; colIdx < board.length; colIdx++) {
+            for (int colIdx = 0; colIdx < board[0].length; colIdx++) {
                 if (board[rowIdx][colIdx] != 0) {
                     if (foundPlayer == 0) {
                         foundPlayer = board[rowIdx][colIdx];
@@ -343,10 +349,10 @@ public class TicTacToeGame implements GameAi.GameAiInterface {
             winPossible = true;
             foundPlayer = 0;
             for (int rowIdx = 0; rowIdx < board.length; rowIdx++) {
-                if (board[rowIdx][move.column] != 0) {
+                if (board[rowIdx][colIdx] != 0) {
                     if (foundPlayer == 0) {
-                        foundPlayer = board[rowIdx][move.column];
-                    } else if (foundPlayer != board[rowIdx][move.column]) {
+                        foundPlayer = board[rowIdx][colIdx];
+                    } else if (foundPlayer != board[rowIdx][colIdx]) {
                         winPossible = false;
                         break;
                     }
@@ -411,8 +417,8 @@ public class TicTacToeGame implements GameAi.GameAiInterface {
                 mBoard[idx] = Arrays.copyOf(board[idx], board[idx].length);
             }
         } else {
-            Log.wtf(TAG, "The board must be square!");
-            mBoard = new int[mBoardSize][mBoardSize];
+            Log.e(TAG, "Invalid board");
+            mBoard = new int[3][3];
         }
     }
 
@@ -429,7 +435,6 @@ public class TicTacToeGame implements GameAi.GameAiInterface {
             return false;
         }
         return true;
-
     }
 
     public static class Move implements GameAi.MoveInterface {
@@ -468,10 +473,11 @@ public class TicTacToeGame implements GameAi.GameAiInterface {
     }
 
     /**
-     * When the
+     * When the GameAi finishes it's
      *
      * @param aiFinishEvent
      */
+    @Override
     @Subscribe
     public void onAiFinishEvent(GameAi.AiFinishEvent aiFinishEvent) {
         if (aiFinishEvent.move instanceof TicTacToeGame.Move) {
@@ -482,9 +488,5 @@ public class TicTacToeGame implements GameAi.GameAiInterface {
                 Log.e(TAG, "The GameAi is attempting to move the wrong player!");
             }
         }
-    }
-
-    public interface GameProvider {
-        TicTacToeGame getGame();
     }
 }

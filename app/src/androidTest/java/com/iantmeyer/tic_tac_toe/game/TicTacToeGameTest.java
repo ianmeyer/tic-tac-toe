@@ -1,4 +1,4 @@
-package com.iantmeyer.tic_tac_toe.model;
+package com.iantmeyer.tic_tac_toe.game;
 
 import org.junit.After;
 import org.junit.Before;
@@ -167,7 +167,7 @@ public class TicTacToeGameTest {
         move = new TicTacToeGame.Move(1, 2, 2);
         assertTrue(game.isDrawMove(move));
 
-        // Second test
+        // second test
         board[0][0] = 0;
         board[0][1] = 0;
         board[0][2] = 0;
@@ -183,6 +183,24 @@ public class TicTacToeGameTest {
         game = new TicTacToeGame(board);
 
         move = new TicTacToeGame.Move(2, 0, 2);
+        assertFalse(game.isDrawMove(move));
+
+        // third test
+        board[0][0] = 1;
+        board[0][1] = 2;
+        board[0][2] = 1;
+
+        board[1][0] = 2;
+        board[1][1] = 2;
+        board[1][2] = 1;
+
+        board[2][0] = 1;
+        board[2][1] = 0;
+        board[2][2] = 0;
+
+        game = new TicTacToeGame(board);
+
+        move = new TicTacToeGame.Move(2, 2, 2);
         assertFalse(game.isDrawMove(move));
     }
 }

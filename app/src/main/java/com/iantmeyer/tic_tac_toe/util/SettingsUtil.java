@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.iantmeyer.tic_tac_toe.App;
+import com.iantmeyer.tic_tac_toe.game.TicTacToeGame;
 
 /**
  * Created by ianmeyer on 12/21/15.
@@ -13,6 +14,7 @@ public class SettingsUtil {
     private static final String PLAYER_1_HUMAN = "player_1_human";
     private static final String PLAYER_2_HUMAN = "player_2_human";
     private static final String GAME_BOARD = "game_board_#R#_#C#";
+    private static final String GAME_STATE = "game_state";
 
     private SettingsUtil() {
         // Don't allow instantiation
@@ -61,6 +63,15 @@ public class SettingsUtil {
                 setInteger(key, board[rowIdx][colIdx]);
             }
         }
+    }
+
+    public static void saveGameState(TicTacToeGame.State state) {
+        setInteger(GAME_STATE, state.ordinal());
+    }
+
+    public static TicTacToeGame.State getGameState() {
+        int ordinal = getInteger(GAME_STATE, TicTacToeGame.State.SET_UP.ordinal());
+        return TicTacToeGame.State.values()[ordinal];
     }
 
     /*

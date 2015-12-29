@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.iantmeyer.tic_tac_toe.util.BusProvider;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -228,6 +229,13 @@ public class GameAi {
          * @return
          */
         double getGameValue(int player);
+
+        /**
+         * TODO IM
+         * @param aiFinishEvent
+         */
+        @Subscribe
+        void onAiFinishEvent(AiFinishEvent aiFinishEvent);
     }
 
     /**
